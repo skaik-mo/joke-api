@@ -75,7 +75,7 @@ function parseInvalidWord(text) {
 
 export async function getJoke(req, res, next) {
   try {
-    if (!req.query.word.trim()) {
+    if (!req.query.word) {
       return res.status(400).json({
         success: false,
         error: "Invalid input: 'word' must be a query string."
