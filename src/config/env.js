@@ -6,6 +6,7 @@ export const {
     OPENROUTER_API_KEY,
     PORT,
     NODE_ENV,
+    USER_NAME = "mohammed-skaik"
 } = process.env;
 
 if (!OPENROUTER_API_KEY) {

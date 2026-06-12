@@ -1,6 +1,6 @@
 import { generateJoke } from '../utils/joke.service.js';
 import { OPENROUTER_API_KEY } from '../config/env.js';
-
+import { USER_NAME } from '../config/env.js'; 
 
 // Arabic Unicode range + common Palestinian/Arabic letters
 const ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
@@ -75,6 +75,12 @@ function parseInvalidWord(text) {
 
 export async function getJoke(req, res, next) {
   try {
+    if (!req.query.word.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid input: 'word' must be a query string."
+      });
+    }
     const { word } = req.query;
     const { valid, message } = validateWord(word);
     if (!valid) {
@@ -84,11 +90,10 @@ export async function getJoke(req, res, next) {
       });
     }
     if (!word || !word.trim()) {
-      const userName = "mohammed-skaik";
       return res.status(400).json({
         success: false,
         error: "Missing required query parameter: 'word'",
-        example: `/api/${userName}/joke?word=school`,
+        example: `/api/${USER_NAME}/joke?word=school`,
       });
     }
 
