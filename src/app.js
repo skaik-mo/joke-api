@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+// import { join, dirname } from 'path';
+// import { fileURLToPath } from 'url';
 import jokeRoutes from './routes/joke.routes.js';
 import notFound from './middlewares/notFound.js';
 import errorHandler from './middlewares/errorHandler.js';
  
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
  
 const app = express();
  
@@ -17,7 +17,7 @@ app.use(express.json());
  
 // Routes
 app.use("/api", jokeRoutes);
-
+ 
 // ── Error middlewares (must be last) ──────────────────────────
 app.use(notFound);
 app.use(errorHandler);
