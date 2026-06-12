@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
  
-app.use(express.static(join(__dirname, '../public')));
+// app.use(express.static(join(__dirname, '../public')));
  
 // Routes
 app.use("/api", jokeRoutes);
