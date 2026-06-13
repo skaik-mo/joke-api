@@ -8,6 +8,8 @@ function errorHandler(err, req, res, next) {
     console.error(err.stack);
   }
 
+  // Force JSON even if something upstream changed the content-type
+  res.setHeader('Content-Type', 'application/json');
   const body = {
     success: false,
     error: "أخ يا راسي! السيرفر فرط ضحك من الكلمة وضربت عنده الفيوزات! 😂 شكلها النكتة طلعت قوية زيادة عن اللزوم، استهدى بالله واضغط كمان مرة هلقيت بنصّحيه.",
