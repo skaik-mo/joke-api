@@ -13,13 +13,21 @@ const MIN_LENGTH = 2;
 export function validateWord(word) {
   const trimmed = word.trim();
   const isOneWord = trimmed.split(/\s+/).length === 1;
+
+  if (!ARABIC_REGEX.test(trimmed)) {
+    return {
+      valid: false,
+      message: "يا عمي السيرفر تبعنا دارس في مدارس حكومة بغزة، ما بيفهمش لغات! 😂 اكتبلي الكلمة بحروف عربية واضحة عشان نطقلك نكتة تفرفش قلبك، جرب: طيارة، فرشة، قهوة.",
+    };
+  }
+
   if (!isOneWord) {
     return {
       valid: false,
-      message: 'الكلمة لازم تكون كلمة وحدة، بدون مسافات. جرب كلمة زي: طيارة، فرشة، قهوة.',
+      message: "شو هاد؟ إنت باعتلي طابور عمال؟ 😂 الكلمة لازم تكون حبة وحدة فرط، بدون فواصل ومسافات. هات كلمة زي: طيارة، فرشة، قهوة.",
     };
   }
-  // only symbols, numbers, or special chars — no letters at all
+
   if (SYMBOLS_ONLY_REGEX.test(trimmed)) {
     return {
       valid: false,
@@ -27,18 +35,10 @@ export function validateWord(word) {
     };
   }
 
-  // empty or too short
   if (!trimmed || trimmed.length < MIN_LENGTH) {
     return {
       valid: false,
-      message: 'الكلمة قصيرة جداً، اكتب كلمة صح.',
-    };
-  }
-
-  if (!ARABIC_REGEX.test(trimmed)) {
-    return {
-      valid: false,
-      message: 'الكلمة لازم تحتوي على حروف عربية عشان أقدر أطلع نكتة عنها، جرب كلمة زي: طيارة، فرشة، قهوة.',
+      message: "بخلان علينا بالحروف يا غالي؟ 😉 اعطينا كلمة كاملة مكملة عشان نضبطلك النكتة هلقيت ع السريع!",
     };
   }
 
@@ -83,7 +83,7 @@ export async function getJoke(req, res, next) {
     if (!req.query.word) {
       return res.status(400).json({
         success: false,
-        error: "Invalid input: 'word' must be a query string."
+        error: "والله السيرفر صفن في طلبك وقال: 'مين هدول وشو جابهم هان؟!' 🤷‍♂️ لا إنت باعت البارامتر الصح، ولابعت شيء عليه القيمة! حط الـ word في الـ Query وخلينا نترزق ونطلع النكتة هالحين!"
       });
     }
     const { word } = req.query;
@@ -98,14 +98,12 @@ export async function getJoke(req, res, next) {
     if (!OPENROUTER_API_KEY) {
       return res.status(503).json({
         success: false,
-        error: 'Service is not configured. OPENROUTER_API_KEY is missing.',
+        error: "السيستم هلقيت زي إلّي رايح يشتري ومعهوش مصاري! 🤣 مفتاح التشغيل ضايع، ثواني وبنحل القصة هادي وبنرجع نضحك عالبركة.",
       });
     }
 
     const joke = await generateJoke(word.trim());
-    console.log('Generated joke:', joke);
     const invalidMessage = parseInvalidWord(joke);
-    console.log('Parsed invalid message:', invalidMessage);
     if (invalidMessage) {
       return res.status(400).json(
         {

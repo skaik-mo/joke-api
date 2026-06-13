@@ -7,7 +7,7 @@ export const {
     PORT,
     NODE_ENV,
     USER_NAME = "mohammed-skaik",
-    INAPPROPRIATE_WORD_MESSAGE = `الكلمة اللي كتبتها غير لائقة أو ليس لها معنى، جرب كلمة ثانية.`
+    INAPPROPRIATE_WORD_MESSAGE = "يا غالي كلمتك يا إما بدها غسيل فم بـِ ليفة، يا إما طلاسم سحر مش فاهمينها! هاتلك كلمة تفتح النفس عشان ننزلك النكتة هلقيت 😉"
 } = process.env;
 
 if (!OPENROUTER_API_KEY) {

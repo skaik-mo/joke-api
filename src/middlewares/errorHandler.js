@@ -10,7 +10,7 @@ function errorHandler(err, req, res, next) {
 
   const body = {
     success: false,
-    error: "An unexpected error occurred. Please try again later.",
+    error: "أخ يا راسي! السيرفر فرط ضحك من الكلمة وضربت عنده الفيوزات! 😂 شكلها النكتة طلعت قوية زيادة عن اللزوم، استهدى بالله واضغط كمان مرة هلقيت بنصّحيه.",
   };
 
   if (NODE_ENV !== "production") {

@@ -40,7 +40,7 @@ async function callModel(model, messages) {
   );
 
   const content = response?.data?.choices?.[0]?.message?.content;
-  if (!content?.trim()) throw new Error(`Model ${model} returned empty content`);
+  if (!content?.trim()) throw new Error(`الموديل ${model} شكله أكل وجبة فخارّة وهلقيت مأنتخ ونايم في العسل! 😂 باعتلي رد فاضي وصامت، استهدى بالله واضغط تاني عشان نصحّيه يطقطق نكت سوا!`);
   return content;
 }
 
@@ -55,14 +55,14 @@ export async function generateJoke(word) {
       console.log(`[joke.service] Success with model: ${model}`);
       return cleanJoke(raw);
     } catch (err) {
-      const reason = err?.response?.data?.error?.message || err.message || 'unknown error';
+      const reason = err?.response?.data?.error?.message || err.message || "أخ يا حظنا! صار معنا خطأ مش معروف قرعة أبوه من وين! 😂 شكلنا انحسدنا والسيرفر أكل عين فجرت فيوزاته، ثواني بنبخر الكيبورد وبنرجع نضبطك!";
       console.warn(`[joke.service] Model ${model} failed: ${reason}`);
       errors.push({ model, reason });
     }
   }
 
   const summary = errors.map((e) => `${e.model}: ${e.reason}`).join(' | ');
-  const finalError = new Error(`All models failed. Details: ${summary}`);
+  const finalError = new Error(`يا غالي، الذكاء الاصطناعي بكل هيبته سكرت معه اليوم وأعلن الإضراب! 😂 الموديلات كلها ضربت فيوزاتها وقالتلك: 'فش نكت اليوم، روحوا ناموا!'.. التفاصيل المهببة: ${summary}`);
   finalError.statusCode = 500;
   throw finalError;
 }
