@@ -1,6 +1,5 @@
 import { generateJoke } from '../utils/joke.service.js';
-import { OPENROUTER_API_KEY } from '../config/env.js';
-import { USER_NAME } from '../config/env.js'; 
+import { USER_NAME, OPENROUTER_API_KEY, INAPPROPRIATE_WORD_MESSAGE } from '../config/env.js';
 
 // Arabic Unicode range + common Palestinian/Arabic letters
 const ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
@@ -17,14 +16,14 @@ export function validateWord(word) {
   if (!isOneWord) {
     return {
       valid: false,
-      message: 'الكلمة لازم تكون كلمة وحدة، بدون مسافات. جرب كلمة زي: سيارة، مطر، كرة.',
+      message: 'الكلمة لازم تكون كلمة وحدة، بدون مسافات. جرب كلمة زي: طيارة، فرشة، قهوة.',
     };
   }
   // only symbols, numbers, or special chars — no letters at all
   if (SYMBOLS_ONLY_REGEX.test(trimmed)) {
     return {
       valid: false,
-      message: 'الكلمة اللي كتبتها ما إلها معنى، جرب كلمة ثانية.',
+      message: INAPPROPRIATE_WORD_MESSAGE,
     };
   }
 
@@ -39,7 +38,7 @@ export function validateWord(word) {
   if (!ARABIC_REGEX.test(trimmed)) {
     return {
       valid: false,
-      message: 'الكلمة لازم تحتوي على حروف عربية عشان أقدر أطلع نكتة عنها، جرب كلمة زي: سيارة، مطر، كرة.',
+      message: 'الكلمة لازم تحتوي على حروف عربية عشان أقدر أطلع نكتة عنها، جرب كلمة زي: طيارة، فرشة، قهوة.',
     };
   }
 
@@ -49,7 +48,7 @@ export function validateWord(word) {
   if (!letters || letters.length < 2) {
     return {
       valid: false,
-      message: 'الكلمة اللي كتبتها ما إلها معنى، جرب كلمة زي: مدرسة، كهرباء، موبايل.',
+      message: INAPPROPRIATE_WORD_MESSAGE,
     };
   }
 
@@ -58,18 +57,24 @@ export function validateWord(word) {
 }
 
 function parseInvalidWord(text) {
+  if (!text || !text.includes('invalid')) return null;
+
+  const cleanText = text.replace(/```json|```/gi, '').trim();
+
   try {
-    // strip markdown code blocks if model wrapped it
-    const stripped = text.replace(/```json|```/gi, '').trim();
-    // extract first {...} block containing "invalid"
-    const match = stripped.match(/\{[^{}]*"invalid"[^{}]*\}/s);
-    if (match) {
-      const parsed = JSON.parse(match[0]);
-      if (parsed.invalid === true) {
-        return parsed.message || 'الكلمة اللي كتبتها ما إلها معنى، جرب كلمة زي: مدرسة، كهرباء، موبايل';
-      }
+    const match = cleanText.match(/\{([\s\S]*)\}/);
+    if (!match) return null;
+
+    const parsed = new Function(`return ${match[0]};`)();
+
+    if (parsed && (parsed.invalid === true || parsed.invalid === 'true')) {
+      return parsed.message?.trim() || INAPPROPRIATE_WORD_MESSAGE;
     }
-  } catch (_) { }
+  } catch (_) {
+    const messageMatch = cleanText.match(/message\s*:\s*["']?([^"'},}\n]+)/);
+    if (messageMatch) return messageMatch[1].trim();
+  }
+
   return null;
 }
 
@@ -87,13 +92,6 @@ export async function getJoke(req, res, next) {
       return res.status(400).json({
         success: false,
         error: message
-      });
-    }
-    if (!word || !word.trim()) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing required query parameter: 'word'",
-        example: `/api/${USER_NAME}/joke?word=school`,
       });
     }
 

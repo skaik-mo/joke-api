@@ -15,7 +15,8 @@ function cleanJoke(text) {
   return text
     .trim()
     .replace(/^["'"«»"]+|["'"«»"]+$/gu, '')
-    .replace(/\\"/g, '"')
+    .replace(/\\"/g, '')
+    .replace(/"/g, '')
     .replace(/\\n/g, '\n')
     .replace(/\n+/g, ' — ')
     .replace(/\s{2,}/g, ' ')
